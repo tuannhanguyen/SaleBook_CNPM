@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Demo</title>
+    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+    <link href="http://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+</head>
+<body>
+{% block nav %}
+    {% include 'base/nav.html' %}
+{% endblock %}
+    <header>
+        {% block header %}
+        {% include 'base/header.html'%}
+        {% endblock %}
+    </header>
+    {% block content %}
+        <h1>Welcome our website</h1>
+    {% endblock %}
+    <footer>
+        {% block footer %}
+        {% include 'base/footer.html' %}
+        {% endblock %}
+    </footer>
+</body>
+</html>

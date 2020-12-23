@@ -1,0 +1,10 @@
+{% extends 'admin/master.html' %}
+
+<!--#ghi de vao body-->
+{% block body %}
+    {% if current_user.is_authenticated %}
+    <h1 class="text-danger">ADMIN PAGE</h1>
+    {% else %}
+    {% include 'admin/login.html' %}
+    {% endif %}
+{% endblock %}
