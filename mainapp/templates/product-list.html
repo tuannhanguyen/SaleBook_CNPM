@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block header %}
-<h1>Danh mục sách</h1>
+<h1>Danh mục sách <span id="cart-stats" class="badge badge-primary">0</span></h1>
 {% endblock %}
 
 {% block content %}
@@ -15,8 +15,9 @@
                 <h3>{{p.name | to_uppercase}}</h3>
                 <p>{{p.price}}</p>
                 <p>
-                    <input type="button" value="Xem chi tiết"  class="btn btn-warning"/>
-                    <input type="button" value="Đặt hàng" class="btn" />
+                    <input type="button" value="Xem chi tiết" class="btn btn-warning"/>
+                    <input type="button" onclick="addToCart({{ p.id }}, '{{ p.name }}', {{ p.price }})"
+                           value="dat hang"/>
                 </p>
             </div>
             {% endif %}
@@ -33,8 +34,10 @@
                 <h3>{{p.name | to_uppercase}}</h3>
                 <p>{{p.price}}</p>
                 <p>
-                    <input type="button" value="Xem chi tiết"  class="btn btn-warning"/>
-                    <input type="button" value="Đặt hàng" class="btn" />
+                    <input type="button" value="Xem chi tiết" class="btn btn-warning"/>
+                    <input type="button" onclick=" addToCart({{ p.id }}, '{{ p.name }}', {{ p.price }})"
+                           value="dat hang"
+                           class="btn btn-warning">
                 </p>
             </div>
             {% endif %}

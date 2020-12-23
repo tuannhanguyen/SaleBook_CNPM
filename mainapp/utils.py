@@ -5,5 +5,11 @@ def read_book():
     return Book.query.all()
 
 
-def read_cate():
-    return Category.query.all()
+def cart_starts(cart):
+    count, price = 0,0
+    for p in cart.values():
+        count = count + p["quantity"]
+        price = price + p["price"] * p["quantity"]
+    return count, price
+
+
