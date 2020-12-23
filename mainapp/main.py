@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, session, redirect, jsonify
 from mainapp import app, utils
 from mainapp.filters import *
 from mainapp import login
@@ -62,6 +62,39 @@ def admin_login():
         if user:
             login_user(user=user)
     return redirect('/admin')  # neu method = get
+
+
+@app.route('/api/cart', methods=['get', 'post'])
+def add_to_cart():
+    if 'cart' not in session:
+        session['cart'] = {}
+    cart = session['cart']
+    data = request.json
+    id = str(data.get('id'))
+    name = data.get('name')
+    price = data.get('price')
+
+    if id in cart:
+        cart[id]['quantity'] = cart[id]['quantity']+1
+    else:
+        cart[id] = {
+            "id": id,
+            "name": name,
+            "price": price,
+            "quantity": 1
+        }
+    session['cart'] = cart
+
+    total_quan, total_amount = utils.cart_starts(cart)
+    # return jsonify({
+    #     "total_amount": total_amount,
+    #     "total_quantity": total_quan,
+    #     "cart": cart
+    # })
+    return jsonify({
+        "total_amount": total_amount,
+        "total_quantity": total_quan
+    })
 
 
 if __name__ == "__main__":
