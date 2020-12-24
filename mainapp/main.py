@@ -97,6 +97,23 @@ def add_to_cart():
     })
 
 
+@app.route('/pay')
+def payment():
+    total_quan, total_amount = utils.cart_starts(session.get('cart'))
+    return render_template("payment.html", total_amount=total_amount, total_quan=total_quan)
+
+
+@app.route('/api/pay', methods=['post'])
+def pay():
+    if 'cart' in session and session['cart']:
+        utils.add_receipt(cart=session['cart'])
+        del session['cart']
+
+        return jsonify({'message': 'Đã thanh toán'})
+
+    return jsonify({'message': 'failed'})
+
+
 if __name__ == "__main__":
     from mainapp.admin_module import *
     app.run(debug=True)

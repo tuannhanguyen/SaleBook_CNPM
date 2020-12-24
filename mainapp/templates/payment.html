@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center text-danger">Thanh toán giỏ hàng</h1>
+    <div class="container">
+        <div class="alert alert-warning">
+            <h3>Số lượng sản phẩm: {{total_quan}}</h3>
+            <h3>Tổng tiền giỏ hàng: {{total_amount}}</h3>
+        </div>
+        <table class="table">
+            <tr>
+<!--            <th>ID</th>-->
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        {% if 'cart' in session and session['cart'] %}
+        {% for p in session['cart'].values() %}
+        <tr>
+<!--            <td>{{ p.id }}</td>-->
+            <td>{{ p.name }}</td>
+            <td>{{ p.price }}</td>
+            <td>
+                <div class="form-group">
+<!--                    lay tu cart-->
+                    <input class="form-control" type="number" value="{{ p.quantity }}" >
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+            <td colspan="4">Không có sản phẩm nào trong giỏ</td>
+        {% endif %}
+        </table>
+        <input type="button" onclick="pay()"
+               value="Thanh toán" class="btn btn-danger ">
+    </div>
+{% endblock %}

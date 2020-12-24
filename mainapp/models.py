@@ -29,6 +29,7 @@ class Book(db.Model):
     active = Column(Boolean, default=True)
     created_date = Column(Date, default=datetime.now())
     category_id = Column(Integer, ForeignKey(Category.id))
+    receipt_details = relationship('ReceiptDetails', backref='book', lazy=True)
 
 
 class User(db.Model, UserMixin):
@@ -38,6 +39,7 @@ class User(db.Model, UserMixin):
     active = Column(Boolean, default=True)
     username = Column(String(100), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
+    receipts = relationship('Receipt', backref='user', lazy=True)
 
     def __str__(self):
         return self.name
@@ -59,6 +61,21 @@ class LogoutView(BaseView):
     def __index__(self):
         logout_user()
         return redirect('/admin')
+
+
+class Receipt(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    date = Column(Date, default=datetime.today())
+    customer_id = Column(Integer, ForeignKey(User.id))
+    details = relationship('ReceiptDetails', backref='receipt', lazy=True)
+
+
+class ReceiptDetails(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    receipt_id = Column(Integer, ForeignKey(Receipt.id))
+    book_id = Column(Integer, ForeignKey(Book.id))
+    quantity = Column(Integer, default=0)
+    price = Column(Float, default=0)
 
 
 if __name__ == '__main__':
