@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 app = Flask(__name__)
 
 app.secret_key='hello'

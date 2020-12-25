@@ -1,5 +1,6 @@
 from mainapp.models import Book, ReceiptDetails, Receipt
 from mainapp import db
+from flask_login import current_user
 
 
 def read_book():
@@ -17,7 +18,8 @@ def cart_starts(cart):
 
 # trong models
 def add_receipt(cart):
-    receipt = Receipt(customer_id=1)
+    # receipt = Receipt(customer_id=1)
+    receipt = Receipt(customer_id=current_user.id)
     db.session.add(receipt)
 
     for p in list(cart.values()):

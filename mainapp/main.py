@@ -3,7 +3,7 @@ from mainapp import app, utils
 from mainapp.filters import *
 from mainapp import login
 from mainapp.models import User
-from flask_login import login_user
+from flask_login import login_user, login_manager
 
 
 @app.route("/")

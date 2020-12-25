@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, Float, String, Date, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from mainapp import db, admin
 from datetime import datetime
-from flask_login import UserMixin, logout_user
+from flask_login import UserMixin, logout_user, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose
 from flask import redirect
@@ -50,6 +50,10 @@ class CategoryModelView(ModelView):
     form_columns = ('name', )
 
 
+class BookModelView(ModelView):
+    form_columns = ('name', 'image', 'price', 'active', 'created_date', 'category', )
+
+
 class AboutUsView(BaseView):
     @expose("/")
     def __index__(self):
@@ -76,6 +80,26 @@ class ReceiptDetails(db.Model):
     book_id = Column(Integer, ForeignKey(Book.id))
     quantity = Column(Integer, default=0)
     price = Column(Float, default=0)
+
+
+class MyCategoryModelView(CategoryModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+class MyBookModelView(BookModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+class MyAboutUsView(AboutUsView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+class MyLogoutView(LogoutView):
+    def is_accessible(self):
+        return current_user.is_authenticated
 
 
 if __name__ == '__main__':
