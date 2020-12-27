@@ -8,8 +8,8 @@
     <h1 class="text-center text-danger">Thanh toán giỏ hàng</h1>
     <div class="container">
         <div class="alert alert-warning">
-            <h3>Số lượng sản phẩm: {{total_quan}}</h3>
-            <h3>Tổng tiền giỏ hàng: {{total_amount}}</h3>
+            <h3>Số lượng sản phẩm:<span id="total_quantity">{{total_quan}}</span> </h3>
+            <h3>Tổng tiền giỏ hàng:<span id="total_amount">{{total_amount}}</span> </h3>
         </div>
         <table class="table">
             <tr>
@@ -17,19 +17,24 @@
             <th>Name</th>
             <th>Price</th>
             <th>Quantity</th>
+            <th></th>
         </tr>
         {% if 'cart' in session and session['cart'] %}
         {% for p in session['cart'].values() %}
-        <tr>
+        <tr id="item{{p.id}}">
 <!--            <td>{{ p.id }}</td>-->
             <td>{{ p.name }}</td>
             <td>{{ p.price }}</td>
             <td>
                 <div class="form-group">
 <!--                    lay tu cart-->
-                    <input class="form-control" type="number" value="{{ p.quantity }}" >
+                    <input class="form-control"
+                           type="number"
+                           onchange="updateItem(this, {{p.id}})"
+                           value="{{ p.quantity }}" >
                 </div>
             </td>
+            <td><a href="javascript:;" onclick="del_item({{p.id}})">Xóa</a></td>
         </tr>
         {% endfor %}
         {% else %}

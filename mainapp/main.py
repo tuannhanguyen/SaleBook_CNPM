@@ -114,6 +114,41 @@ def pay():
     return jsonify({'message': 'failed'})
 
 
+@app.route('/api/cart/<item_id>', methods=['DELETE'])
+def delete_item(item_id):
+    if 'cart' in session:
+        cart = session['cart']
+        if item_id in cart:
+            del cart[item_id]
+            session['cart'] = cart
+
+            return jsonify({'err_msg': 'Thanh cong',
+                            'code': 200,
+                            'item_id': item_id
+                            })
+
+    return jsonify({'err_msg': 'that bai', 'code': 500})
+
+
+@app.route('/api/cart/<item_id>', methods=['post'])
+def update_item(item_id):
+    if 'cart' in session:
+        cart = session['cart']
+        # du lieu gui len tu bo dy cua ham fetch
+        data = request.json
+        if item_id in cart and 'quantity' in data:
+            cart[item_id]['quantity'] = int(data['quantity'])
+            session['cart'] = cart
+            total_quan, total_amount = utils.cart_starts(session.get('cart'))
+            return jsonify({'err_msg': 'Thanh cong',
+                            'code': 200,
+                            'total_quantity': total_quan,
+                            'total_amount': total_amount
+                            })
+
+        return jsonify({'err_msg': 'that bai', 'code': 500})
+
+
 if __name__ == "__main__":
     from mainapp.admin_module import *
     app.run(debug=True)
