@@ -11,7 +11,7 @@ header >h1{
     color:  gray;
     font-size:56px;
     text-shadow: 3px 4px lightblue; /*nhoe chu*/
-    /*animation: doimau 1s infinite;*/
+    animation: doimau 1s infinite;
 }
 
 @keyframes doimau{

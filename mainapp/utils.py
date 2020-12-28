@@ -1,10 +1,18 @@
-from mainapp.models import Book, ReceiptDetails, Receipt
+import hashlib
+from mainapp.models import Book, ReceiptDetail, Receipt,  User, UserRole
 from mainapp import db
 from flask_login import current_user
 
 
-def read_book():
-    return Book.query.all()
+def read_book(kw=None):
+    books = Book.query
+    if kw:
+        books = books.filter(Book.name.contains(kw))
+    return books.all()
+
+
+def get_book_by_id(book_id):
+    return Book.query.get(book_id)
 
 
 def cart_starts(cart):
@@ -16,20 +24,40 @@ def cart_starts(cart):
     return count, price
 
 
+def check_login(username, password, role=UserRole.ADMIN):
+    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+
+    user = User.query.filter(User.username == username,
+                             User.password == password,
+                             User.user_role == role).first()
+
+    return user
+
+
 # trong models
 def add_receipt(cart):
-    # receipt = Receipt(customer_id=1)
-    receipt = Receipt(customer_id=current_user.id)
-    db.session.add(receipt)
+    if cart:
+        receipt = Receipt(customer_id=current_user.id)
+        db.session.add(receipt)
 
-    for p in list(cart.values()):
-        detail = ReceiptDetails(quantity=p["quantity"],
-                                price=p["price"],
-                                book_id=p["id"],
-                                receipt=receipt)
-        db.session.add(detail)
+        for p in list(cart.values()):
+            detail = ReceiptDetail(receipt=receipt,
+                                   product_id=int(p["id"]),
+                                   quantity=p["quantity"],
+                                   price=p["price"])
+            db.session.add(detail)
 
-    db.session.commit()
+        try:
+            db.session.commit()
+            return True
+        except Exception as ex:
+            print(ex)
+
+    return False
+
+
+
+
 
 
 

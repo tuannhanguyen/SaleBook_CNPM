@@ -1,6 +1,6 @@
   <nav>
         <ul>
-            <li><a href="#">Trang chủ</a></li>
+            <li><a href="/products">Trang chủ</a></li>
             <li class="submenu">
                 <a href="/products">Danh mục sách</a>
                 <ul class="subcontent">
@@ -10,6 +10,19 @@
                 </ul>
             </li>
             <li><a href="#">Contact</a></li>
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+              <form>
+                <div class="form-group">
+                    <input placeholder="Nhập từ khóa tìm kiếm..."
+                           name="kw"
+                           class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit"
+                           class="btn btn-danger"
+                           value="Tìm kiếm" />
+                </div>
+            </form>
             <li><a href="/pay" ><img src="/static/images/cart-icon.jpg" style="height:50px; width:50px" class="text-right" /></a> </li>
             <li> <a href="{{ url_for('payment') }}" id="cart-stats" class="badge badge-primary" >0</a></li>
         </ul>

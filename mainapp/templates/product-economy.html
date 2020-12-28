@@ -10,12 +10,14 @@
     {% for p in books %}
         {% if p.category_id == 2%}
         <div class="car">
-            <img src={{url_for('static', filename=p.image)}} alt="p.name" style="width: 216px; height: 310px;" />
+            <img src={{url_for('static', filename=p.image)}} alt="p.name"  />
             <div>
                 <h3>{{p.name | to_uppercase}}</h3>
                 <p>{{p.price}}</p>
                 <p>
-                    <input type="button" value="Xem chi tiết" class="btn btn-primary" />
+                     <a href="/products/{{p.id}}">
+                    <input type="button" value="Xem chi tiết" class="btn btn-primary"/>
+                    </a>
                     <input type="button" value="Đặt hàng" class="btn btn-danger" />
                 </p>
             </div>

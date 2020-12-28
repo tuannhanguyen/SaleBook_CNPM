@@ -30,8 +30,17 @@ def index2(id):
 
 @app.route('/products')
 def product_list():
-    books = utils.read_book()
+    kw = request.args.get('kw')
+    books = utils.read_book(kw=kw)
     return render_template('product-list.html', books=books)
+
+
+@app.route("/products/<int:book_id>")
+def product_detail(book_id):
+    book = utils.get_book_by_id(book_id=book_id)
+
+    return render_template('book-detail.html',
+                           book=book)
 
 
 @app.route('/product-economic')
@@ -51,17 +60,18 @@ def get_user(user_id):
     return User.query.get(user_id)  # select * from User where id = userid
 
 
-@app.route('/login', methods=['get', 'post'])
+@app.route('/login', methods=['get','post'])
 def admin_login():
     if request.method == 'POST':
         username = request.form.get('username')
-        password = request.form.get('password')
+        password = request.form.get('password', '')
 
-        user = User.query.filter(User.username == username,
-                                 User.password == password).first()
+        user = utils.check_login(username=username,
+                                 password=password)
         if user:
             login_user(user=user)
-    return redirect('/admin')  # neu method = get
+
+    return redirect('/admin')
 
 
 @app.route('/api/cart', methods=['get', 'post'])
@@ -105,13 +115,24 @@ def payment():
 
 @app.route('/api/pay', methods=['post'])
 def pay():
-    if 'cart' in session and session['cart']:
-        utils.add_receipt(cart=session['cart'])
+    # if 'cart' in session and session['cart']:
+    #     utils.add_receipt(cart=session['cart'])
+    #     del session['cart']
+    #
+    #     return jsonify({'message': 'Đã thanh toán'})
+    #
+    # return jsonify({'message': 'failed'})
+    if utils.add_receipt(session.get('cart')):
         del session['cart']
 
-        return jsonify({'message': 'Đã thanh toán'})
+        return jsonify({
+            "message": "Đã thanh toán",
+            "err_code": 200
+        })
 
-    return jsonify({'message': 'failed'})
+    return jsonify({
+        "message": "Failed"
+    })
 
 
 @app.route('/api/cart/<item_id>', methods=['DELETE'])

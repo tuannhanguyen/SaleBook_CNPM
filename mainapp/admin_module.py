@@ -1,5 +1,5 @@
 from mainapp import admin, db
-from mainapp.models import Category, Book,  MyCategoryModelView,MyBookModelView, AboutUsView, LogoutView, MyAboutUsView, MyLogoutView
+from mainapp.models import Category, Book,  MyCategoryModelView, MyBookModelView, AboutUsView, LogoutView, MyAboutUsView, MyLogoutView
 from flask_admin.contrib.sqla import ModelView
 
 admin.add_view(MyCategoryModelView(Category, db.session))
