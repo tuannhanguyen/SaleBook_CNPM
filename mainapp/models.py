@@ -109,7 +109,7 @@
 
 from sqlalchemy import Column, Integer, Float, String, \
     Boolean, Enum, ForeignKey, Date
-from flask import  redirect
+from flask import redirect
 from sqlalchemy.orm import relationship
 from mainapp import db
 from flask_login import UserMixin, current_user, logout_user
@@ -222,6 +222,23 @@ class MyAboutUsView(AboutUsView):
 class MyLogoutView(LogoutView):
     def is_accessible(self):
         return current_user.is_authenticated
+
+
+class UserModelView(ModelView):
+    form_columns = ('name', 'email', 'username', 'password', 'user_role', )
+
+
+class MyUserModelView(UserModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+class Controller(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+    def not_auth(self):
+        return "your are not authorized the admin"
 
 
 if __name__ == '__main__':

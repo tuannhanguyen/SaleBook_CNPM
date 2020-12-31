@@ -51,6 +51,10 @@
                     <li>{{ "{:,.1f}".format(book.price) }} VNĐ</li>
                 </ul>
             </h3>
+            <p>
+                    <input type="button" onclick="addToCart({{ book.id }}, '{{ book.name }}', {{ book.price }})"
+                           value="Đặt hàng" class="btn btn-danger"/>
+                </p>
         </div>
     </div>
     </div>

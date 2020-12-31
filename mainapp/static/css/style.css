@@ -10,8 +10,8 @@ header >h1{
     text-align: center;
     color:  gray;
     font-size:56px;
-    text-shadow: 3px 4px lightblue; /*nhoe chu*/
-    animation: doimau 1s infinite;
+    /*text-shadow: 3px 4px lightblue;*/ /*nhoe chu*/
+    /*animation: doimau 1s infinite;*/
 }
 
 @keyframes doimau{

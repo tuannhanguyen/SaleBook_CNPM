@@ -1,9 +1,11 @@
-from flask import render_template, request, session, redirect, jsonify
+import os
+
+from flask import render_template, request, session, redirect, jsonify, url_for
 from mainapp import app, utils
 from mainapp.filters import *
 from mainapp import login
 from mainapp.models import User
-from flask_login import login_user, login_manager
+from flask_login import login_user, login_manager, current_user
 
 
 @app.route("/")
@@ -60,8 +62,9 @@ def get_user(user_id):
     return User.query.get(user_id)  # select * from User where id = userid
 
 
-@app.route('/login', methods=['get','post'])
+@app.route('/login', methods=['get', 'post'])
 def admin_login():
+    err = " "
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password', '')
@@ -72,6 +75,54 @@ def admin_login():
             login_user(user=user)
 
     return redirect('/admin')
+
+
+@app.route('/login-user', methods=['get', 'post'])
+def login():
+    err_msg = ""
+    if request.method == 'POST':
+        username = request.form.get("username")
+        password = request.form.get("password",'')
+
+        user = utils.validate_user(username=username, password=password)
+        if user:
+            current_user.id = user.id
+            return redirect(url_for("product_list"))
+        else:
+            err_msg = "Đăng nhập không thành công"
+
+        user = utils.check_login(username=username,
+                                 password=password)
+        if user:
+            return redirect(url_for('admin_login'))
+        else:
+            err_msg = "Đăng nhập không thành công"
+
+    return render_template('login.html', err_msg=err_msg)
+
+
+@app.route('/register', methods=['get', 'post'])
+def register():
+    err_msg = ""
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm = request.form.get('confirm-password')
+        if password == confirm:
+            name = request.form.get('name')
+            email = request.form.get('email')
+            username = request.form.get('username')
+            f = request.files["avatar"]
+            avatar_path = 'images/upload/%s' % f.filename
+            f.save(os.path.join(app.root_path, 'static/', avatar_path))
+            if utils.register_user(name=name, username=username, password=password,
+                                   email=email, avatar=avatar_path):
+                return redirect('/')
+            else:
+                err_msg = "Hệ thống đang bị lỗi! Vui lòng thực hiện sau!"
+        else:
+            err_msg = "Mật khâu KHÔNG khớp!"
+
+    return render_template('register.html', err_msg=err_msg)
 
 
 @app.route('/api/cart', methods=['get', 'post'])
@@ -85,7 +136,7 @@ def add_to_cart():
     price = data.get('price')
 
     if id in cart:
-        cart[id]['quantity'] = cart[id]['quantity']+1
+        cart[id]['quantity'] = cart[id]['quantity'] + 1
     else:
         cart[id] = {
             "id": id,
@@ -172,4 +223,5 @@ def update_item(item_id):
 
 if __name__ == "__main__":
     from mainapp.admin_module import *
+
     app.run(debug=True)

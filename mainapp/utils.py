@@ -1,5 +1,8 @@
 import hashlib
-from mainapp.models import Book, ReceiptDetail, Receipt,  User, UserRole
+
+from flask import session
+
+from mainapp.models import Book, ReceiptDetail, Receipt, User, UserRole
 from mainapp import db
 from flask_login import current_user
 
@@ -34,6 +37,31 @@ def check_login(username, password, role=UserRole.ADMIN):
     return user
 
 
+def validate_user(username, password):
+    password = str(hashlib.md5(password.strip().encode("utf-8")).hexdigest())
+
+    user = User.query.filter(User.username == username, User.password == password,
+                             User.user_role == UserRole.USER).first()
+
+    return user
+
+
+def register_user(name, email, username, password, avatar):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+    u = User(name=name,
+             email=email,
+             username=username,
+             password=password,
+             avatar=avatar,
+             user_role=UserRole.USER)
+    try:
+        db.session.add(u)
+        db.session.commit()
+        return True
+    except:
+        return False
+
+
 # trong models
 def add_receipt(cart):
     if cart:
@@ -54,10 +82,3 @@ def add_receipt(cart):
             print(ex)
 
     return False
-
-
-
-
-
-
-
