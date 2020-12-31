@@ -108,7 +108,7 @@
 
 
 from sqlalchemy import Column, Integer, Float, String, \
-    Boolean, Enum, ForeignKey, Date
+    Boolean, Enum, ForeignKey, Date, false
 from flask import redirect
 from sqlalchemy.orm import relationship
 from mainapp import db
@@ -228,7 +228,16 @@ class UserModelView(ModelView):
     form_columns = ('name', 'email', 'username', 'password', 'user_role', )
 
 
+class ReceiptModelView(ModelView):
+    can_create = False
+
+
 class MyUserModelView(UserModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
+class MyReceiptModelView(ReceiptModelView):
     def is_accessible(self):
         return current_user.is_authenticated
 
