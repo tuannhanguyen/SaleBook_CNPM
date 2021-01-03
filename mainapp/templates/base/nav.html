@@ -25,5 +25,11 @@
             </form>
             <li><a href="/pay" ><img src="/static/images/cart-icon.jpg" style="height:50px; width:50px" class="text-right" /></a> </li>
             <li> <a href="{{ url_for('payment') }}" id="cart-stats" class="badge badge-primary" >0</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('logout') }}">Đăng xuất</a></li>
+            {% else %}
+            <li><a href="{{ url_for('admin_login') }}">Đăng nhập</a></li>
+            <li> <a href="{{ url_for('register') }}">Đăng ký</a></li>
+            {% endif %}
         </ul>
     </nav>

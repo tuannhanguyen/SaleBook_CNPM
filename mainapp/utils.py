@@ -27,7 +27,7 @@ def cart_starts(cart):
     return count, price
 
 
-def check_login(username, password, role=UserRole.ADMIN):
+def check_login(username, password, role):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
 
     user = User.query.filter(User.username == username,

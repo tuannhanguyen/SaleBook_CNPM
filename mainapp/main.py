@@ -1,11 +1,13 @@
 import os
 
 from flask import render_template, request, session, redirect, jsonify, url_for
+from flask_admin import expose
+
 from mainapp import app, utils
 from mainapp.filters import *
 from mainapp import login
-from mainapp.models import User
-from flask_login import login_user, login_manager, current_user
+from mainapp.models import User, UserRole
+from flask_login import login_user, login_manager, current_user, logout_user, login_required
 
 
 @app.route("/")
@@ -70,9 +72,14 @@ def admin_login():
         password = request.form.get('password', '')
 
         user = utils.check_login(username=username,
-                                 password=password)
+                                 password=password, role=UserRole.ADMIN)
         if user:
             login_user(user=user)
+        user = utils.check_login(username=username,
+                                 password=password, role=UserRole.USER)
+        if user:
+            login_user(user=user)
+            return redirect('/products')
 
     return redirect('/admin')
 
@@ -219,6 +226,13 @@ def update_item(item_id):
                             })
 
         return jsonify({'err_msg': 'that bai', 'code': 500})
+
+
+@app.route("/login")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/admin')
 
 
 if __name__ == "__main__":
