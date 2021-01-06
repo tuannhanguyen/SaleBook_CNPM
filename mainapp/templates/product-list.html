@@ -8,7 +8,7 @@
 {% block content %}
 
 
-    <h1>&nbsp;Văn học</h1>
+<h1>&nbsp;Văn học</h1>
 <section class="cars">
     {% for p in books %}
         {% if p.category_id == 1%}
@@ -44,6 +44,27 @@
                     </a>
                     <input type="button" onclick=" addToCart({{ p.id }}, '{{ p.name }}', {{ p.price }})"
                            value="Đặt hàng" class="btn btn-danger">
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+<h1>&nbspKhoa học</h1>
+<section class="cars">
+    {% for p in books %}
+        {% if p.category_id == 3%}
+        <div class="car">
+            <img src={{url_for('static', filename=p.image)}} alt="p.name"/>
+            <div>
+                <h3>{{p.name | to_uppercase}}</h3>
+                <p>{{p.price}}</p>
+                <p>
+                    <a href="/products/{{p.id}}">
+                    <input type="button" value="Xem chi tiết" class="btn btn-primary"/>
+                    </a>
+                    <input type="button" onclick="addToCart({{ p.id }}, '{{ p.name }}', {{ p.price }})"
+                           value="Đặt hàng" class="btn btn-danger"/>
                 </p>
             </div>
             {% endif %}

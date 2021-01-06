@@ -12,7 +12,7 @@ function addToCart(id, name, price){
     }).then(res => res.json()).then(data =>{
         console.info(data);
         var stats = document.getElementById("cart-stats")
-        stats.innerText = `${data.total_quantity} - ${data.total_amount} vnd`;
+        stats.innerText = `${data.total_quantity} `;
     })
 }
 

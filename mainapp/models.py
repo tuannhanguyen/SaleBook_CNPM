@@ -1,7 +1,8 @@
+from os import abort
 
 from sqlalchemy import Column, Integer, Float, String, \
     Boolean, Enum, ForeignKey, Date, false
-from flask import redirect
+from flask import redirect, abort
 from sqlalchemy.orm import relationship
 from mainapp import db, utils
 from flask_login import UserMixin, current_user, logout_user
@@ -98,18 +99,29 @@ class ReceiptDetail(db.Model):
 
 class MyCategoryModelView(CategoryModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
 
 
 class MyBookModelView(BookModelView):
+        def is_accessible(self):
+            return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
+
+
+class Controller(ModelView):
     def is_accessible(self):
-        if User.user_role == UserRole.USER:
-            return current_user.is_authenticated
+        # if current_user.user_role == 2:
+        return current_user.is_authenticated
+        # else:
+        #     abort(404)
+        # return current_user.is_authenticated
+    def not_auth(self):
+        return "NOT allow"
 
 
 class MyAboutUsView(AboutUsView):
+
     def is_accessible(self):
-        return current_user.is_authenticated
+        return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
 
 
 class MyLogoutView(LogoutView):
@@ -119,12 +131,13 @@ class MyLogoutView(LogoutView):
 
 class UserModelView(ModelView):
     can_create = False
+    can_edit = False
     form_columns = ('name', 'email', 'username', 'password', 'user_role', )
 
 
 class MyUserModelView(UserModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
 
 
 class ReceiptModelView(ModelView):
@@ -134,12 +147,12 @@ class ReceiptModelView(ModelView):
 
 class MyReceiptModelView(ReceiptModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
 
 
 class Controller(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        return (current_user.is_authenticated and current_user.user_role == UserRole.ADMIN)
 
     def not_auth(self):
         return "your are not authorized the admin"

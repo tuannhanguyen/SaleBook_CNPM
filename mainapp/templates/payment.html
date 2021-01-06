@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<a href="/products" class="text-left"><< Danh mục sách</a>
     <h1 class="text-center text-danger">Thanh toán giỏ hàng</h1>
     <div class="container">
         <div class="alert alert-warning">
@@ -13,7 +14,6 @@
         </div>
         <table class="table">
             <tr>
-<!--            <th>ID</th>-->
             <th>Name</th>
             <th>Price</th>
             <th>Quantity</th>
@@ -22,7 +22,6 @@
         {% if 'cart' in session and session['cart'] %}
         {% for p in session['cart'].values() %}
         <tr id="item{{p.id}}">
-<!--            <td>{{ p.id }}</td>-->
             <td>{{ p.name }}</td>
             <td>{{ p.price }}</td>
             <td>

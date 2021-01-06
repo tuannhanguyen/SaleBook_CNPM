@@ -1,12 +1,9 @@
 import os
 
 from flask import render_template, request, session, redirect, jsonify, url_for
-from flask_admin import expose
-
-from mainapp import app, utils
+from mainapp import app
 from mainapp.filters import *
 from mainapp import login
-from mainapp.models import User, UserRole
 from flask_login import login_user, login_manager, current_user, logout_user, login_required
 
 
@@ -59,6 +56,12 @@ def product_list_literature():
     return render_template('product-literature.html', books=books)
 
 
+@app.route('/product-science')
+def product_list_science():
+    books = utils.read_book()
+    return render_template('product-science.html', books=books)
+
+
 @login.user_loader
 def get_user(user_id):
     return User.query.get(user_id)  # select * from User where id = userid
@@ -75,6 +78,7 @@ def admin_login():
                                  password=password, role=UserRole.ADMIN)
         if user:
             login_user(user=user)
+
         user = utils.check_login(username=username,
                                  password=password, role=UserRole.USER)
         if user:
@@ -82,30 +86,6 @@ def admin_login():
             return redirect('/products')
 
     return redirect('/admin')
-
-
-@app.route('/login-user', methods=['get', 'post'])
-def login():
-    err_msg = ""
-    if request.method == 'POST':
-        username = request.form.get("username")
-        password = request.form.get("password",'')
-
-        user = utils.validate_user(username=username, password=password)
-        if user:
-            current_user.id = user.id
-            return redirect(url_for("product_list"))
-        else:
-            err_msg = "Đăng nhập không thành công"
-
-        user = utils.check_login(username=username,
-                                 password=password)
-        if user:
-            return redirect(url_for('admin_login'))
-        else:
-            err_msg = "Đăng nhập không thành công"
-
-    return render_template('login.html', err_msg=err_msg)
 
 
 @app.route('/register', methods=['get', 'post'])
@@ -125,9 +105,9 @@ def register():
                                    email=email, avatar=avatar_path):
                 return redirect('/')
             else:
-                err_msg = "Hệ thống đang bị lỗi! Vui lòng thực hiện sau!"
+                err_msg = "Lỗi hệ thống"
         else:
-            err_msg = "Mật khâu KHÔNG khớp!"
+            err_msg = "Mật khẩu không khớp"
 
     return render_template('register.html', err_msg=err_msg)
 
@@ -213,7 +193,7 @@ def delete_item(item_id):
 def update_item(item_id):
     if 'cart' in session:
         cart = session['cart']
-        # du lieu gui len tu bo dy cua ham fetch
+        # du lieu gui len tu body cua ham fetch
         data = request.json
         if item_id in cart and 'quantity' in data:
             cart[item_id]['quantity'] = int(data['quantity'])
@@ -233,6 +213,17 @@ def update_item(item_id):
 def logout():
     logout_user()
     return redirect('/admin')
+
+
+@app.route('/graph')
+def graph(chartID='chart_ID', chart_type='line', chart_height=500):
+    chart = {"renderTo": chartID, "type": chart_type, "height": chart_height, }
+    series = [{"name": 'Label1', "data": [1, 2, 3]}, {"name": 'Label2', "data": [4, 5, 6]}]
+    title = {"text": 'My Title'}
+    xAxis = {"categories": ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
+    yAxis = {"title": {"text": 'yAxis Label'}}
+    return render_template('/admin/about-us.html', chartID=chartID, chart=chart, series=series, title=title, xAxis=xAxis,
+                           yAxis=yAxis)
 
 
 if __name__ == "__main__":

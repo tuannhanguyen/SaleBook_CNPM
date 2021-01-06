@@ -65,8 +65,8 @@ nav  ul > li > a:hover {
 }
 /*css footer*/
 footer{
-    background-color:black;
-    color:white;
+    background-color: lightgray;
+    color:black;
     padding:5px
 }
 footer h1, footer p{

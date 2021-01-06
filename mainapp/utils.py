@@ -2,7 +2,7 @@ import hashlib
 
 from flask import session
 
-from mainapp.models import Book, ReceiptDetail, Receipt, User, UserRole
+from mainapp.models import Book, ReceiptDetail, Receipt, User, UserRole, BookModelView
 from mainapp import db
 from flask_login import current_user
 
