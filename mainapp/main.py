@@ -9,24 +9,16 @@ from flask_login import login_user, login_manager, current_user, logout_user, lo
 
 @app.route("/")
 def index():
-    categories = ["ALL", "VĂN HỌC", "KINH TẾ", "SÁCH THIẾU NHI", "SÁCH NGOẠI NGỮ"]
-    kw = request.args.get("keyword")
-    if kw:
-        result = []
-        for cat in categories:
-            if cat in categories(kw) >= 0:
-                result.append(cat)
-    else:
-        result = categories
-    return render_template('index.html', categories=result)
-
-
-@app.route("/<int:id>")
-def index2(id):
-    if id == 1:
-        return render_template('index.html', categories=["VĂN HỌC", "KINH TẾ"])
-    else:
-        return render_template('index.html', categories=["SÁCH THIẾU NHI", "SÁCH NGOẠI NGỮ"])
+    # categories = ["ALL", "VĂN HỌC", "KINH TẾ", "SÁCH THIẾU NHI", "SÁCH NGOẠI NGỮ"]
+    # kw = request.args.get("keyword")
+    # if kw:
+    #     result = []
+    #     for cat in categories:
+    #         if cat in categories(kw) >= 0:
+    #             result.append(cat)
+    # else:
+    #     result = categories
+    return render_template('index.html')
 
 
 @app.route('/products')
@@ -83,7 +75,7 @@ def admin_login():
                                  password=password, role=UserRole.USER)
         if user:
             login_user(user=user)
-            return redirect('/products')
+            return redirect('/')
 
     return redirect('/admin')
 

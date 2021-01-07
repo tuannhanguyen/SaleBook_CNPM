@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Đăng ký</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
-</head>
-<body>
+
+{% extends 'base/base.html' %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+
     <div class="container">
-        <h1 class="text-center text-success">ĐĂNG KÝ TÀI KHOẢN</h1>
+        <h1 class="text-center text-success">Đăng ký</h1>
+        <h4>Đã có tài khoản? <a href="/admin">Đăng nhập tại đây</a></h4>
         {% if err_msg %}
         <div class="alert alert-danger">
             {{ err_msg }}
@@ -65,5 +66,4 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}
