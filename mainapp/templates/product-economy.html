@@ -2,13 +2,15 @@
 
 {% block header %}
 <h1>Sách kinh tế</h1>
+<title>Sách kinh tế</title>
+
 {% endblock %}
 
 
 {% block content %}
     <section class="cars">
     {% for p in books %}
-        {% if p.category_id == 2%}
+        {% if p.category_id == 2 and p.active == 1 %}
         <div class="car">
             <img src={{url_for('static', filename=p.image)}} alt="p.name"  />
             <div>

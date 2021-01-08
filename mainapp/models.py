@@ -130,8 +130,7 @@ class MyLogoutView(LogoutView):
 
 
 class UserModelView(ModelView):
-    can_create = False
-    can_edit = False
+    can_create = True
     form_columns = ('name', 'email', 'username', 'password', 'user_role', )
 
 

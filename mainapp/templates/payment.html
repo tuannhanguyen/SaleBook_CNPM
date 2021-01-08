@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block header %}
-
+<title>Thanh toán giỏ hàng</title>
 {% endblock %}
 
 {% block content %}
@@ -9,14 +9,14 @@
     <h1 class="text-center text-danger">Thanh toán giỏ hàng</h1>
     <div class="container">
         <div class="alert alert-warning">
-            <h3>Số lượng sản phẩm:<span id="total_quantity">{{total_quan}}</span> </h3>
-            <h3>Tổng tiền giỏ hàng:<span id="total_amount">{{total_amount}}</span> </h3>
+            <h3>Số lượng sản phẩm: <span id="total_quantity">{{total_quan}}</span> </h3>
+            <h3>Tổng tiền giỏ hàng: <span id="total_amount">{{total_amount}}</span> </h3>
         </div>
         <table class="table">
             <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
+            <th>Tên sách</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
             <th></th>
         </tr>
         {% if 'cart' in session and session['cart'] %}
@@ -42,5 +42,8 @@
         </table>
         <input type="button" onclick="pay()"
                value="Thanh toán" class="btn btn-danger ">
+        <div id="paypal-payment-button">
+            <script src="https://www.paypal.com/sdk/js?client-id=ARGD3E75_kqRX4Kj6ki2IW_rG3HWwC2schSqifJIsKWY_6uWRNIGMaMGECkoHSENMu0AywtjOGY_afoh&disable-funding=credit,card"></script>
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
     </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 import os
 
+import paypalrestsdk as paypalrestsdk
 from flask import render_template, request, session, redirect, jsonify, url_for
 from mainapp import app
 from mainapp.filters import *
@@ -9,15 +10,6 @@ from flask_login import login_user, login_manager, current_user, logout_user, lo
 
 @app.route("/")
 def index():
-    # categories = ["ALL", "VĂN HỌC", "KINH TẾ", "SÁCH THIẾU NHI", "SÁCH NGOẠI NGỮ"]
-    # kw = request.args.get("keyword")
-    # if kw:
-    #     result = []
-    #     for cat in categories:
-    #         if cat in categories(kw) >= 0:
-    #             result.append(cat)
-    # else:
-    #     result = categories
     return render_template('index.html')
 
 
@@ -207,15 +199,60 @@ def logout():
     return redirect('/admin')
 
 
-@app.route('/graph')
-def graph(chartID='chart_ID', chart_type='line', chart_height=500):
-    chart = {"renderTo": chartID, "type": chart_type, "height": chart_height, }
-    series = [{"name": 'Label1', "data": [1, 2, 3]}, {"name": 'Label2', "data": [4, 5, 6]}]
-    title = {"text": 'My Title'}
-    xAxis = {"categories": ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
-    yAxis = {"title": {"text": 'yAxis Label'}}
-    return render_template('/admin/about-us.html', chartID=chartID, chart=chart, series=series, title=title, xAxis=xAxis,
-                           yAxis=yAxis)
+@app.route('/paypal')
+def paypal():
+    return render_template('paypal.html')
+
+
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": "CLIENT_ID",
+  "client_secret": "CLIENT_SECRET" })
+
+
+@app.route('/payment', methods=['POST'])
+def payment_():
+
+    payment_ = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"},
+        "redirect_urls": {
+            "return_url": "http://localhost:3000/payment/execute",
+            "cancel_url": "http://localhost:3000/"},
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": "testitem",
+                    "sku": "12345",
+                    "price": "500.00",
+                    "currency": "USD",
+                    "quantity": 1}]},
+            "amount": {
+                "total": "500.00",
+                "currency": "USD"},
+            "description": "This is the payment transaction description."}]})
+
+    if payment.create():
+        print('Payment success!')
+    else:
+        print(payment.error)
+
+    return jsonify({'paymentID' : payment.id})
+
+@app.route('/execute', methods=['POST'])
+def execute():
+    success = False
+
+    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+
+    if payment.execute({'payer_id' : request.form['payerID']}):
+        print('Execute success!')
+        success = True
+    else:
+        print(payment.error)
+
+    return jsonify({'success' : success})
 
 
 if __name__ == "__main__":

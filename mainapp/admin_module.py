@@ -13,4 +13,3 @@ admin.add_view(MyAboutUsView(name="Thống kê"))
 admin.add_view(MyUserModelView(User, db.session))
 admin.add_view(MyReceiptModelView(Receipt, db.session))
 admin.add_view(MyLogoutView(name="Đăng xuất"))
-

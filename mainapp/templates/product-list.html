@@ -2,6 +2,8 @@
 
 {% block header %}
 <h1>Danh mục sách </h1>
+<title>Danh mục sách</title>
+
 <!--<a href="{{ url_for('payment') }}" id="cart-stats" class="badge badge-primary" >0</a>-->
 {% endblock %}
 
@@ -25,7 +27,7 @@
 <h1>&nbsp;Văn học</h1>
 <section class="cars">
     {% for p in books %}
-        {% if p.category_id == 1%}
+        {% if p.category_id == 1 and p.active == 1%}
         <div class="car">
             <img src={{url_for('static', filename=p.image)}} alt="p.name"/>
             <div>
@@ -46,7 +48,7 @@
 <h1>&nbsp;Kinh tế</h1>
 <section class="cars">
     {% for p in books %}
-        {% if p.category_id == 2 %}
+        {% if p.category_id == 2 and p.active == 1 %}
         <div class="car">
             <img src={{url_for('static', filename=p.image)}} alt="p.name"  />
             <div>
@@ -67,7 +69,7 @@
 <h1>&nbspKhoa học</h1>
 <section class="cars">
     {% for p in books %}
-        {% if p.category_id == 3%}
+        {% if p.category_id == 3 and p.active == 1 %}
         <div class="car">
             <img src={{url_for('static', filename=p.image)}} alt="p.name"/>
             <div>
